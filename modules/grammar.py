@@ -79,13 +79,13 @@ class Grammar:
         self.productions.insert(0, augmented_prod)
 
     def _identify_symbols(self):
-        for prod in self.productions:
-            self.non_terminals.add(prod.lhs)
-            if prod.lhs not in self.non_terminal_order:
-                self.non_terminal_order.append(prod.lhs)
+        for production in self.productions:
+            self.non_terminals.add(production.lhs)
+            if production.lhs not in self.non_terminal_order:
+                self.non_terminal_order.append(production.lhs)
             
-        for prod in self.productions:
-            for symbol in prod.rhs:
+        for production in self.productions:
+            for symbol in production.rhs:
                 if symbol not in self.non_terminals: 
                     self.terminals.add(symbol)
                     if symbol not in self.terminal_order:
