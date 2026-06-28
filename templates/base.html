@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SLR Parser</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@3.5.0/dist/full.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="bg-base-200 min-h-screen pb-10">
+    <div class="bg-primary text-primary-content shadow-lg mb-8 py-4 text-center">
+    <h1 class="text-3xl font-bold">SLR Parser</h1>
+    </div>
+
+    <div class="container mx-auto px-4">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

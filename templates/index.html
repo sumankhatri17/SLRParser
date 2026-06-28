@@ -1,0 +1,189 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="lg:col-span-1 space-y-6">
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title text-primary border-b pb-2">Grammar & Input String</h2>
+                <form method="POST" action="/" class="space-y-4">
+                    <div class="form-control">
+                        <label class="label"><span class="label-text font-bold">Context-Free Grammar</span></label>
+                        <textarea name="grammar" class="textarea textarea-bordered font-mono h-40" required placeholder="E -> E + T&#10;E -> T&#10;T -> T * F&#10;T -> F&#10;F -> ( E )&#10;F -> id">{{ raw_grammar }}</textarea>
+                    </div>
+                    <div class="form-control">
+                        <label class="label"><span class="label-text font-bold">Input String to Parse</span></label>
+                        <input type="text" name="input_string" value="{{ input_string }}" class="input input-bordered font-mono" placeholder="id * id + id" />
+                    </div>
+                    <button type="submit" class="btn btn-primary w-full">Generate Parser & Simulate</button>
+                </form>
+                
+                {% if error %}
+                <div class="alert alert-error mt-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    <span>{{ error }}</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if result %}
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title text-primary border-b pb-2">Augmented Grammar</h2>
+                <table class="table table-xs font-mono">
+                    <tbody>
+                        {% for prod in result.grammar.productions %}
+                        <tr>
+                            <td>{{ loop.index0 }}</td>
+                            <td>{{ prod.lhs }} &rarr; {{ prod.rhs | join(' ') }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title text-primary border-b pb-2">FIRST & FOLLOW Sets</h2>
+                <table class="table table-xs font-mono text-center">
+                    <thead>
+                        <tr>
+                            <th>Non-Terminal</th>
+                            <th>FIRST</th>
+                            <th>FOLLOW</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for nt in result.display_non_terminals %}
+                        <tr>
+                            <td class="font-bold">{{ nt }}</td>
+                            <td>{{ '{ ' ~ result.first_sets[nt] | join(', ') ~ ' }' }}</td>
+                            <td>{{ '{ ' ~ result.follow_sets[nt] | join(', ') ~ ' }' }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="lg:col-span-2 space-y-6">
+        {% if result %}
+        
+        {% if result.conflicts %}
+        <div class="alert alert-warning shadow-lg">
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                <span><b>Warning: Grammar is not SLR.</b> Conflicts detected:<br>
+                {% for conf in result.conflicts %}- {{ conf }}<br>{% endfor %}</span>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body overflow-x-auto">
+                <h2 class="card-title text-primary border-b pb-2">LR(0) Canonical Collection (DFA)</h2>
+                {% if result.dfa_graph %}
+                <div class="flex justify-center bg-white p-4 rounded-lg border">
+                    <img src="{{ url_for('static', filename='graphs/' + result.dfa_graph) }}" alt="DFA Graph" class="max-w-full h-auto">
+                </div>
+                {% else %}
+                <div class="alert alert-warning">
+                    <span>{{ result.graph_error or 'DFA graph could not be rendered because Graphviz is unavailable.' }}</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body overflow-x-auto">
+                <h2 class="card-title text-primary border-b pb-2">SLR Parsing Table</h2>
+                <table class="table table-zebra table-xs font-mono text-center w-full table-fixed">
+                    <thead>
+                        <tr class="bg-base-200">
+                            <th rowspan="2" class="border-r border-b border-gray-300 align-middle w-20">State</th>
+                            <th colspan="{{ result.terminals|length }}" class="border-r border-b border-gray-300">ACTION</th>
+                            <th colspan="{{ result.non_terminals|length }}" class="border-b border-gray-300">GOTO</th>
+                        </tr>
+                        <tr class="bg-base-200">
+                            {% for t in result.terminals %}
+                            <th class="border-r border-gray-300 whitespace-nowrap px-3 py-2">{{ t }}</th>
+                            {% endfor %}
+                            {% for nt in result.non_terminals %}
+                            <th class="border-l border-gray-300 whitespace-nowrap px-3 py-2">{{ nt }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for state in result.states %}
+                        {% set state_id = state.state_id %}
+                        <tr class="hover">
+                            <td class="font-bold border-r border-gray-300 whitespace-nowrap px-3 py-2">{{ state_id }}</td>
+                            
+                            {% for t in result.terminals %}
+                            <td class="border-r border-gray-300 whitespace-nowrap px-3 py-2">
+                                {% if result.action_table[state_id] and t in result.action_table[state_id] %}
+                                    {% if result.action_table[state_id][t] == 'ACC' %}
+                                        <span class="badge badge-success badge-sm text-white">ACC</span>
+                                    {% else %}
+                                        {{ result.action_table[state_id][t] }}
+                                    {% endif %}
+                                {% endif %}
+                            </td>
+                            {% endfor %}
+                            
+                            {% for nt in result.non_terminals %}
+                            <td class="border-l border-gray-300 whitespace-nowrap px-3 py-2">
+                                {% if result.goto_table[state_id] and nt in result.goto_table[state_id] %}
+                                    {{ result.goto_table[state_id][nt] }}
+                                {% endif %}
+                            </td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        {% if result.parsing_trace %}
+        <div class="card bg-base-100 shadow-xl mb-10">
+            <div class="card-body overflow-x-auto">
+                <div class="flex justify-between items-center border-b pb-2">
+                    <h2 class="card-title text-primary">Parsing Action</h2>
+                    <div class="badge badge-lg {% if result.parse_status == 'ACCEPTED' %}badge-success text-white{% else %}badge-error text-white{% endif %} font-bold">
+                        {{ result.parse_status }}
+                    </div>
+                </div>
+                <table class="table table-zebra table-sm font-mono w-full parsing-trace-table">
+                    <thead>
+                        <tr class="bg-base-200">
+                            <th>Step</th>
+                            <th>Stack</th>
+                            <th class="text-right">Input</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for step in result.parsing_trace %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ step.stack | join(' ') }}</td>
+                            <td class="text-right">{{ step.input }}</td>
+                            <td class="font-bold text-primary">{{ step.display_action }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+        
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

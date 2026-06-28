@@ -1,0 +1,72 @@
+/* Custom Scrollbars for large tables */
+.overflow-x-auto::-webkit-scrollbar {
+    height: 8px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+    border-radius: 4px;
+}
+ 
+.overflow-x-auto::-webkit-scrollbar-thumb {
+    background: #cbd5e1; 
+    border-radius: 4px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8; 
+}
+
+.table th, .table td {
+    white-space: nowrap;
+}
+
+.parsing-trace-table {
+    table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.parsing-trace-table th,
+.parsing-trace-table td {
+    padding: 0.8rem 1rem;
+    border-right: 1px solid rgba(148, 163, 184, 0.45);
+    border-bottom: 1px solid rgba(148, 163, 184, 0.45);
+    vertical-align: middle;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.parsing-trace-table th:last-child,
+.parsing-trace-table td:last-child {
+    border-right: none;
+}
+
+.parsing-trace-table thead th {
+    font-weight: 700;
+}
+
+.parsing-trace-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.parsing-trace-table th:nth-child(1),
+.parsing-trace-table td:nth-child(1) {
+    width: 6rem;
+    text-align: center;
+}
+
+.parsing-trace-table th:nth-child(2),
+.parsing-trace-table td:nth-child(2) {
+    width: 34%;
+}
+
+.parsing-trace-table th:nth-child(3),
+.parsing-trace-table td:nth-child(3) {
+    width: 34%;
+}
+
+.parsing-trace-table th:nth-child(4),
+.parsing-trace-table td:nth-child(4) {
+    width: 24%;
+}
