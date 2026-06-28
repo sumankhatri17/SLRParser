@@ -1,0 +1,25 @@
+# Python bytecode (automatically generated, no need to track)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Python Virtual Environment
+venv/
+.venv/
+env/
+ENV/
+
+# IDE / Editor configurations
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+
+# Environment variables / Secrets (add this now in case you use a .env later)
+.env

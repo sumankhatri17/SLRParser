@@ -32,7 +32,6 @@ To use the application, enter the context-free grammar rules in the text area us
 - Example: `E -> E + T`
 - Use `|` to denote multiple alternatives for the same non-terminal on a single line.
 - Example: `T -> T * F | F`
-- Use `e` or `epsilon` to represent an empty string production.
 
 ## Project Structure
 
