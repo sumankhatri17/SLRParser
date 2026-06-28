@@ -1,0 +1,75 @@
+digraph {
+	rankdir=LR size="10,10"
+	node [fillcolor="#f3f4f6" fontname=Courier fontsize=10 shape=box style="rounded,filled"]
+	edge [fontname=Courier fontsize=9]
+	0 [label="State 0
+
+E → • E + T
+E → • T
+E' → • E
+F → • (E)
+F → • id
+T → • F
+T → • T * F
+"]
+	1 [label="State 1
+
+E → T •
+T → T • * F
+"]
+	2 [label="State 2
+
+E → E • + T
+E' → E •
+"]
+	3 [label="State 3
+
+T → F •
+"]
+	4 [label="State 4
+
+F → id •
+"]
+	5 [label="State 5
+
+F → (E) •
+"]
+	6 [label="State 6
+
+F → • (E)
+F → • id
+T → T * • F
+"]
+	7 [label="State 7
+
+E → E + • T
+F → • (E)
+F → • id
+T → • F
+T → • T * F
+"]
+	8 [label="State 8
+
+T → T * F •
+"]
+	9 [label="State 9
+
+E → E + T •
+T → T • * F
+"]
+	0 -> 1 [label=T]
+	0 -> 2 [label=E]
+	0 -> 3 [label=F]
+	0 -> 4 [label=id]
+	0 -> 5 [label="(E)"]
+	1 -> 6 [label="*"]
+	2 -> 7 [label="+"]
+	6 -> 8 [label=F]
+	6 -> 4 [label=id]
+	6 -> 5 [label="(E)"]
+	7 -> 9 [label=T]
+	7 -> 3 [label=F]
+	7 -> 4 [label=id]
+	7 -> 5 [label="(E)"]
+	9 -> 6 [label="*"]
+}
