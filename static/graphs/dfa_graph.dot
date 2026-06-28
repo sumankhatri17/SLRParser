@@ -4,72 +4,100 @@ digraph {
 	edge [fontname=Courier fontsize=9]
 	0 [label="State 0
 
+E’' → • E’
+E’ → • E
 E → • E + T
 E → • T
-E' → • E
-F → • (E)
-F → • id
-T → • F
 T → • T * F
+T → • F
+F → • ( E )
+F → • id
 "]
 	1 [label="State 1
+
+E’' → E’ •
+"]
+	2 [label="State 2
+
+E’ → E •
+E → E • + T
+"]
+	3 [label="State 3
 
 E → T •
 T → T • * F
 "]
-	2 [label="State 2
-
-E → E • + T
-E' → E •
-"]
-	3 [label="State 3
+	4 [label="State 4
 
 T → F •
 "]
-	4 [label="State 4
-
-F → id •
-"]
 	5 [label="State 5
 
-F → (E) •
+F → ( • E )
+E → • E + T
+E → • T
+T → • T * F
+T → • F
+F → • ( E )
+F → • id
 "]
 	6 [label="State 6
 
-F → • (E)
-F → • id
-T → T * • F
+F → id •
 "]
 	7 [label="State 7
 
 E → E + • T
-F → • (E)
-F → • id
-T → • F
 T → • T * F
+T → • F
+F → • ( E )
+F → • id
 "]
 	8 [label="State 8
 
-T → T * F •
+T → T * • F
+F → • ( E )
+F → • id
 "]
 	9 [label="State 9
+
+E → E • + T
+F → ( E • )
+"]
+	10 [label="State 10
 
 E → E + T •
 T → T • * F
 "]
-	0 -> 1 [label=T]
+	11 [label="State 11
+
+T → T * F •
+"]
+	12 [label="State 12
+
+F → ( E ) •
+"]
+	0 -> 1 [label="E’"]
 	0 -> 2 [label=E]
-	0 -> 3 [label=F]
-	0 -> 4 [label=id]
-	0 -> 5 [label="(E)"]
-	1 -> 6 [label="*"]
+	0 -> 3 [label=T]
+	0 -> 4 [label=F]
+	0 -> 5 [label="("]
+	0 -> 6 [label=id]
 	2 -> 7 [label="+"]
-	6 -> 8 [label=F]
-	6 -> 4 [label=id]
-	6 -> 5 [label="(E)"]
-	7 -> 9 [label=T]
-	7 -> 3 [label=F]
-	7 -> 4 [label=id]
-	7 -> 5 [label="(E)"]
-	9 -> 6 [label="*"]
+	3 -> 8 [label="*"]
+	5 -> 9 [label=E]
+	5 -> 3 [label=T]
+	5 -> 4 [label=F]
+	5 -> 5 [label="("]
+	5 -> 6 [label=id]
+	7 -> 10 [label=T]
+	7 -> 4 [label=F]
+	7 -> 5 [label="("]
+	7 -> 6 [label=id]
+	8 -> 11 [label=F]
+	8 -> 5 [label="("]
+	8 -> 6 [label=id]
+	9 -> 7 [label="+"]
+	9 -> 12 [label=")"]
+	10 -> 8 [label="*"]
 }
